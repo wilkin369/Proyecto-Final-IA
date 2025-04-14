@@ -1,5 +1,3 @@
-from pydoc import text
-from sys import exception
 import gradio as gr
 import librosa
 import soundfile as sf
