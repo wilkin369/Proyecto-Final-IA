@@ -7,7 +7,7 @@ import openai
 import os
 
 # Configuración de la API key de OpenAI
-openai.api_key = os.getenv("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") or "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"
+openai.api_key = os.getenv("")
 def aplicar_efecto(audio, efecto):
     if audio is None:     # Validación: si no hay audio, no procesar
         return None, None
