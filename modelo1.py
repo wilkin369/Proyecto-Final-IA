@@ -7,7 +7,7 @@ import openai
 import os
 
 # Configuración de la API key de OpenAI
-openai.api_key = os.getenv("")
+openai.api_key = os.getenv("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") or "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"
 def aplicar_efecto(audio, efecto):
     if audio is None:     # Validación: si no hay audio, no procesar
         return None, None
@@ -33,22 +33,24 @@ def aplicar_efecto(audio, efecto):
     temp_path = tempfile.mktemp(suffix=".wav")
     sf.write(temp_path, y, sr)
     
-    # Transcripción usando OpenAI Whisper
+        # Intenta transcribir el audio original usando OpenAI Whisper
     try:
-        with open(audio, "rb") as f:
+        with open(audio, "rb") as f:  # Llama a la API de OpenAI para transcribir el audio
             transcripcion = openai.Audio.transcribe("whisper-1", f)["text"]
-    except Exception as e:
+    except Exception as e:  # Si hay un error durante la transcripción, captura el mensaje
         transcripcion = f"error al transcribir: {e}"
         
+     # Devuelve la ruta al archivo de audio modificado y la transcripción
     return temp_path, transcripcion
 
-#Interfaz
+# Configuración de la interfaz gráfica con Gradio
 with gr.Blocks() as interfaz:
-    gr.Markdown("## Modificador de voz con librosa + Transcriptor")
+    gr.Markdown("## Modificador de voz con librosa + Transcriptor") # Títulos de la aplicación
     gr.Markdown("Sube o graba un audio, elige un efecto y mira la transcripcion del contenido. ")
     
+    # Primera fila: entradas del usuario
     with gr.Row():
-        entrada_audio = gr.Audio(label="Audio de entrada", type="filepath")
+        entrada_audio = gr.Audio(label="Audio de entrada", type="filepath")     # Componente para subir o grabar audio
         efecto = gr.Dropdown(
             ["Robot agudo y distorsionado", "Alien, grave y distorsionado", "Ardilla, muy aguda"],
             label="Selecciona un efecto"
@@ -56,13 +58,16 @@ with gr.Blocks() as interfaz:
         
     boton = gr.Button("Aplicar efecto y transcribir")
     
+    # Segunda fila: salidas (resultados)
     with gr.Row():
         salida_audio = gr.Audio(label="Audio con efecto", type="filepath")
         salida_texto = gr.Textbox(label="texto transcrito")
-        
+    
+    # Configura la función que se ejecutará al hacer clic en el botón
+    # Conecta las entradas y salidas con la función aplicar_efecto    
     boton.click(fn=aplicar_efecto, inputs=[entrada_audio, efecto], outputs=[salida_audio, salida_texto])
     
-
+# Inicia la aplicación web
 interfaz.launch()
     
     
