@@ -1,3 +1,4 @@
+# wilkins gervacio 23-EISN-2-036
 import gradio as gr
 import librosa
 import soundfile as sf
@@ -17,6 +18,7 @@ def aplicar_efecto(audio, efecto):
     if len(y.shape) > 1: # Si el audio es estéreo (2 canales), convertirlo a mono tomando solo el primer canal
         y = y[:, 0]
     # Aplicar el efecto seleccionado
+    # wilkins gervacio 23-EISN-2-036
     if efecto == "Robot agudo y distorsionado":
         y_shifted = librosa.effects.pitch_shift(y.astype(float), sr=sr, n_steps=5)
         y = y_shifted * np.sign(np.sin(2 * np.pi * 30 * np.arange(len(y_shifted)) / sr))
@@ -33,7 +35,8 @@ def aplicar_efecto(audio, efecto):
     temp_path = tempfile.mktemp(suffix=".wav")
     sf.write(temp_path, y, sr)
     
-        # Intenta transcribir el audio original usando OpenAI Whisper
+    # wilkins gervacio 23-EISN-2-036
+    # Intenta transcribir el audio original usando OpenAI Whisper
     try:
         with open(audio, "rb") as f:  # Llama a la API de OpenAI para transcribir el audio
             transcripcion = openai.Audio.transcribe("whisper-1", f)["text"]
@@ -43,6 +46,7 @@ def aplicar_efecto(audio, efecto):
      # Devuelve la ruta al archivo de audio modificado y la transcripción
     return temp_path, transcripcion
 
+# wilkins gervacio 23-EISN-2-036
 # Configuración de la interfaz gráfica con Gradio
 with gr.Blocks() as interfaz:
     gr.Markdown("## Modificador de voz con librosa + Transcriptor") # Títulos de la aplicación
@@ -66,7 +70,8 @@ with gr.Blocks() as interfaz:
     # Configura la función que se ejecutará al hacer clic en el botón
     # Conecta las entradas y salidas con la función aplicar_efecto    
     boton.click(fn=aplicar_efecto, inputs=[entrada_audio, efecto], outputs=[salida_audio, salida_texto])
-    
+
+# wilkins gervacio 23-EISN-2-036
 # Inicia la aplicación web
 interfaz.launch()
     
